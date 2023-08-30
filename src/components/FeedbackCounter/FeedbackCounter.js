@@ -1,7 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Notification from "./Notification";
 import Statistics from "./Statistics";
-
+import FeedbackOptions from "./FeedbackOptions";
+import Section from "./Section";
 import '../FeedbackCounter/FeedbackCounter.css'
 
 
@@ -18,70 +20,53 @@ class FeedbackCounter extends React.Component {
         neutral: 0,
         bad: 0
     }
-
-    setGoodFeedback = () => {
-        this.setState(prevGood=>({
-            good: prevGood.good + 1,
+    
+    setFeedback = (typeOfFeedback) => {
+        this.setState((prevFeedback)=>({
+            [typeOfFeedback]:prevFeedback[typeOfFeedback]+1,
         }));
-    };
-
-    setNeutralFeedback = () => {
-        this.setState(prevNeutral=>({
-            neutral: prevNeutral.neutral + 1,
-        }));
-    };
-
-    setBadFeedback = () => {
-        this.setState(prevBad=>({
-            bad: prevBad.bad + 1,
-        }));
-    };
-
+    }
 
     render() {
+        const {good,neutral,bad} = this.state;
   
-        const countTotalFeedback = this.state.good + this.state.bad + this.state.neutral;
+        const countTotalFeedback = good + bad + neutral;
 
         const countPositiveFeedbackPercentage = Math.round((this.state.good / countTotalFeedback) * 100) || 0;
 
         return (
             <div className="Counter">
-                <h2 className="Title">Please leave feedback</h2>
-                <div className="CounterControls">
-                    <button 
-                        type="button" 
-                        onClick={this.setGoodFeedback}
-                    >
-                    Good
-                    </button>
-                    <button 
-                        type="button" 
-                        onClick={this.setNeutralFeedback}
-                    >
-                    Neutral
-                    </button>
-                    <button 
-                        type="button" 
-                        onClick={this.setBadFeedback}
-                    >
-                    Bad
-                    </button>
-                </div>
 
+                <Section title="Please leave feedback">
 
-                {countTotalFeedback === 0 ? (
-                    <Notification message="There is no feedback"/>
-                ) : (
-                    <div>
-                        <h2 className="Title">Statistics</h2>
+                    <FeedbackOptions options={['good','neutral','bad']} onLeaveFeedback={this.setFeedback}/>
 
-                        <Statistics good={this.state.good} neutral={this.state.neutral} bad={this.state.bad} total={countTotalFeedback} positivePercentage={countPositiveFeedbackPercentage}/>
-                    </div>
-                )} 
+                </Section>
+                
+                <Section title="Statistics">
+
+                    {countTotalFeedback === 0 ? (
+                        <Notification message="There is no feedback"/>
+                        ) : (
+                            <Statistics 
+                                good={good} 
+                                neutral={neutral} 
+                                bad={bad} 
+                                total={countTotalFeedback} 
+                                positivePercentage={countPositiveFeedbackPercentage}
+                            />
+                    )} 
+                </Section>
 
             </div>
         );
     }
 }
 
+FeedbackCounter.propTypes = {
+    good: PropTypes.number.isRequired,
+    neutral:  PropTypes.number.isRequired,
+    bad: PropTypes.number.isRequired,
+    }
 export default FeedbackCounter;
+
