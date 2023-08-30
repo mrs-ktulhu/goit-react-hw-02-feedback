@@ -1,4 +1,5 @@
 import React from "react";
+import Statistics from "./Statistics";
 import '../FeedbackCounter/FeedbackCounter.css'
 
 
@@ -36,38 +37,38 @@ class FeedbackCounter extends React.Component {
 
 
     render() {
+  
+        const countTotalFeedback = this.state.good + this.state.bad + this.state.neutral;
+
+        const countPositiveFeedbackPercentage = Math.round((this.state.good / countTotalFeedback) * 100) || 0;
+
         return (
             <div className="Counter">
                 <h2 className="Title">Please leave feedback</h2>
-
                 <div className="CounterControls">
                     <button 
                         type="button" 
                         onClick={this.setGoodFeedback}
                     >
-                        Good
+                    Good
                     </button>
                     <button 
                         type="button" 
                         onClick={this.setNeutralFeedback}
                     >
-                        Neutral
+                    Neutral
                     </button>
                     <button 
                         type="button" 
                         onClick={this.setBadFeedback}
                     >
-                        Bad
+                    Bad
                     </button>
                 </div>
-
                 <h2 className="Title">Statistics</h2>
 
-                <div className="StatisticsTotal">
-                    <span className="StatisticsValue">Good: {this.state.good}</span>
-                    <span className="StatisticsValue">Neutral: {this.state.neutral}</span>
-                    <span className="StatisticsValue">Bad: {this.state.bad}</span>
-                </div>
+                <Statistics good={this.state.good} neutral={this.state.neutral} bad={this.state.bad} total={countTotalFeedback} positivePercentage={countPositiveFeedbackPercentage}/> 
+
             </div>
         );
     }
