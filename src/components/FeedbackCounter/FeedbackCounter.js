@@ -1,5 +1,7 @@
 import React from "react";
+import Notification from "./Notification";
 import Statistics from "./Statistics";
+
 import '../FeedbackCounter/FeedbackCounter.css'
 
 
@@ -65,9 +67,17 @@ class FeedbackCounter extends React.Component {
                     Bad
                     </button>
                 </div>
-                <h2 className="Title">Statistics</h2>
 
-                <Statistics good={this.state.good} neutral={this.state.neutral} bad={this.state.bad} total={countTotalFeedback} positivePercentage={countPositiveFeedbackPercentage}/> 
+
+                {countTotalFeedback === 0 ? (
+                    <Notification message="There is no feedback"/>
+                ) : (
+                    <div>
+                        <h2 className="Title">Statistics</h2>
+
+                        <Statistics good={this.state.good} neutral={this.state.neutral} bad={this.state.bad} total={countTotalFeedback} positivePercentage={countPositiveFeedbackPercentage}/>
+                    </div>
+                )} 
 
             </div>
         );
