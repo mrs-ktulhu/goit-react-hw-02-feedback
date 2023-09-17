@@ -1,21 +1,11 @@
 import React from 'react';
-import Notification from './Notification';
-import styled from 'styled-components';
-import Statistics from './Statistics';
-import FeedbackOptions from './FeedbackOptions';
-import Section from './Section';
-
-const Counter = styled.div`
-  position: relative;
-  padding: 20px;
-`;
+import Notification from '../Notification/Notification';
+import Statistics from '../Statistics/Statistics';
+import FeedbackOptions from '../FeedbackOptions/FeedbackOptions';
+import Section from '../Section/Section';
+import {Counter} from './FeedbackCounter.styled'
 
 class FeedbackCounter extends React.Component {
-  static defaultProps = {
-    initialGood: 0,
-    initialNeutral: 0,
-    initialBad: 0,
-  };
 
   state = {
     good: 0,
@@ -29,19 +19,27 @@ class FeedbackCounter extends React.Component {
     }));
   };
 
+  countTotalFeedback = () => {
+    const { good, neutral, bad } = this.state;
+    return good + bad + neutral;
+  };
+
+  countPositiveFeedbackPercentage = () => {
+    const countTotalFeedback = this.countTotalFeedback();
+    return Math.round((this.state.good / countTotalFeedback) * 100) || 0;
+  };
+
   render() {
     const { good, neutral, bad } = this.state;
 
-    const countTotalFeedback = good + bad + neutral;
-
-    const countPositiveFeedbackPercentage =
-      Math.round((this.state.good / countTotalFeedback) * 100) || 0;
+    const countTotalFeedback = this.countTotalFeedback();
+    const countPositiveFeedbackPercentage = this.countPositiveFeedbackPercentage();
 
     return (
       <Counter>
         <Section title="Please leave feedback">
           <FeedbackOptions
-            options={['good', 'neutral', 'bad']}
+            options={Object.keys(this.state)}
             onLeaveFeedback={this.setFeedback}
           />
         </Section>
